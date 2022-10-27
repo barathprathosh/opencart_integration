@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include opencart_integration *.css
+recursive-include opencart_integration *.csv
+recursive-include opencart_integration *.html
+recursive-include opencart_integration *.ico
+recursive-include opencart_integration *.js
+recursive-include opencart_integration *.json
+recursive-include opencart_integration *.md
+recursive-include opencart_integration *.png
+recursive-include opencart_integration *.py
+recursive-include opencart_integration *.svg
+recursive-include opencart_integration *.txt
+recursive-exclude opencart_integration *.pyc
