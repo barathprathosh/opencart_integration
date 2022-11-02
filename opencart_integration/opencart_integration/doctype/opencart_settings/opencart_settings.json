@@ -12,6 +12,8 @@
   "api_username",
   "api_key",
   "column_break_5",
+  "api_url",
+  "signature",
   "api_token"
  ],
  "fields": [
@@ -44,12 +46,22 @@
    "fieldname": "api_token",
    "fieldtype": "Data",
    "label": "API Token"
+  },
+  {
+   "fieldname": "api_url",
+   "fieldtype": "Data",
+   "label": "API URL"
+  },
+  {
+   "fieldname": "signature",
+   "fieldtype": "Data",
+   "label": "Signature"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-10-29 22:03:39.285798",
+ "modified": "2022-11-02 10:36:40.326260",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Settings",

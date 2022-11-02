@@ -1,0 +1,172 @@
+{
+    "status": "200",
+    "orders": {
+        "order_id": "7515",
+        "invoice_no": "3",
+        "invoice_prefix": "INV-2020-00",
+        "store_id": "0",
+        "store_name": "Sparesale",
+        "store_url": "https://sparesale.com/",
+        "customer_id": "1",
+        "firstname": "Suraj",
+        "lastname": "Chaturvdi",
+        "telephone": "8421342403",
+        "fax": "",
+        "email": "chaturvedi5190@gmail.com",
+        "payment_firstname": "Suraj",
+        "payment_lastname": "Chaturvdi",
+        "payment_company": "sa",
+        "payment_address_1": "wadgaonsheri",
+        "payment_address_2": "ganeshnagar",
+        "payment_postcode": "411033",
+        "payment_city": "pune",
+        "payment_zone_id": "1493",
+        "payment_zone": "Maharashtra",
+        "payment_zone_code": "MA",
+        "payment_country_id": "99",
+        "payment_country": "India",
+        "payment_iso_code_2": "IN",
+        "payment_iso_code_3": "IND",
+        "payment_address_format": "",
+        "payment_method": "Pay by Razorpay <br> <a href=\"https://www.razorpay.com\" target=\"_blank\"><img src=\"https://cdn.razorpay.com/static/assets/logo/pa",
+        "shipping_firstname": "Suraj",
+        "shipping_lastname": "Chaturvdi",
+        "shipping_company": "BlueDart",
+        "shipping_address_1": "wadgaonsheri",
+        "shipping_address_2": "ganeshnagar",
+        "shipping_postcode": "411033",
+        "shipping_city": "pune",
+        "shipping_zone_id": "1493",
+        "shipping_zone": "Maharashtra",
+        "shipping_zone_code": "MA",
+        "shipping_country_id": "99",
+        "shipping_country": "India",
+        "shipping_iso_code_2": "IN",
+        "shipping_iso_code_3": "IND",
+        "shipping_address_format": "",
+        "shipping_method": "Shipping Charges Rate",
+        "comment": "",
+        "total": "₹219",
+        "order_status_id": "5",
+        "order_status": "Complete",
+        "language_id": "1",
+        "currency_id": "4",
+        "currency_code": "INR",
+        "currency_value": "1.00000000",
+        "date_modified": "2021-05-17 10:28:08",
+        "date_added": "2020-10-20 15:01:52",
+        "ip": "103.93.199.122",
+        "products": [
+            {
+                "order_product_id": "12872",
+                "order_id": "7515",
+                "product_id": "1283",
+                "name": "0B , 0B EA, RT8243CZQW RT8243C IC",
+                "model": "LPIC0503",
+                "hsn": "",
+                "quantity": "1",
+                "price": "₹174",
+                "total": "₹174",
+                "tax": "0.0000",
+                "reward": "0",
+                "options": [],
+                "image": "https://sparesale.com/image/catalog/lpic/0503/RT8243CZQW-800x600.jpg"
+            }
+        ],
+        "order_totals": [
+            {
+                "order_total_id": "23817",
+                "order_id": "7515",
+                "code": "sub_total",
+                "title": "Sub-Total",
+                "value": "174.0000",
+                "sort_order": "1",
+                "text": "₹174"
+            },
+            {
+                "order_total_id": "23818",
+                "order_id": "7515",
+                "code": "shipping",
+                "title": "Shipping Charges Rate",
+                "value": "45.0000",
+                "sort_order": "3",
+                "text": "₹45"
+            },
+            {
+                "order_total_id": "23819",
+                "order_id": "7515",
+                "code": "total",
+                "title": "Total",
+                "value": "219.0000",
+                "sort_order": "9",
+                "text": "₹219"
+            }
+        ],
+        "purchase_order": "",
+        "histories": [
+            {
+                "date_added": "20/10/2020",
+                "status": "Processing",
+                "comment": ""
+            },
+            {
+                "date_added": "20/10/2020",
+                "status": "Processing",
+                "comment": ""
+            },
+            {
+                "date_added": "20/10/2020",
+                "status": "Processing",
+                "comment": "Payment Successful. Razorpay Payment Id:pay_FrCKcxDKPmZl0H"
+            },
+            {
+                "date_added": "21/10/2020",
+                "status": "Canceled",
+                "comment": ""
+            },
+            {
+                "date_added": "21/01/2021",
+                "status": "Complete",
+                "comment": "Test complete"
+            },
+            {
+                "date_added": "21/01/2021",
+                "status": "Complete",
+                "comment": ""
+            },
+            {
+                "date_added": "13/03/2021",
+                "status": "Pending",
+                "comment": ""
+            },
+            {
+                "date_added": "13/03/2021",
+                "status": "Processed",
+                "comment": "test message"
+            },
+            {
+                "date_added": "17/05/2021",
+                "status": "Complete",
+                "comment": ""
+            }
+        ],
+        "tracking": "69635614020",
+        "is_bluedart": 1,
+        "bluedart": {
+            "order_id": "7515",
+            "awb_number": "69635614020",
+            "token_number": "NP-69635614020",
+            "is_active": "1",
+            "created_at": "2021-10-24 21:56:00",
+            "is_pdf_generated": "0",
+            "pdf_url": ""
+        },
+        "BDShipment": [],
+        "customer_custom_fields": [
+            {
+                "name": "company name",
+                "value": "snayog-test user "
+            }
+        ]
+    }
+}

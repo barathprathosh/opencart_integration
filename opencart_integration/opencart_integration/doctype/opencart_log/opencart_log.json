@@ -11,8 +11,9 @@
   "column_break_3",
   "reference_name",
   "section_break_5",
+  "status",
   "method",
-  "error"
+  "traceback"
  ],
  "fields": [
   {
@@ -48,22 +49,27 @@
   },
   {
    "fieldname": "method",
-   "fieldtype": "Data",
+   "fieldtype": "Code",
    "in_list_view": 1,
    "label": "Title",
    "read_only": 1
   },
   {
-   "fieldname": "error",
+   "fieldname": "traceback",
    "fieldtype": "Code",
-   "label": "Error",
+   "label": "Traceback",
    "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
   }
  ],
  "icon": "fa fa-warning-sign",
  "in_create": 1,
  "links": [],
- "modified": "2022-10-29 21:57:24.280075",
+ "modified": "2022-11-02 10:49:18.024978",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Log",

@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+import requests
 
 class OpencartSettings(Document):
 	pass
