@@ -14,7 +14,11 @@
   "column_break_5",
   "api_url",
   "signature",
-  "api_token"
+  "api_token",
+  "customer_section",
+  "customer_type",
+  "column_break_11",
+  "customer_group"
  ],
  "fields": [
   {
@@ -56,12 +60,34 @@
    "fieldname": "signature",
    "fieldtype": "Data",
    "label": "Signature"
+  },
+  {
+   "depends_on": "eval:doc.enable",
+   "fieldname": "customer_section",
+   "fieldtype": "Section Break",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "customer_type",
+   "fieldtype": "Select",
+   "label": "Customer Type",
+   "options": "Company\nIndividual"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "customer_group",
+   "fieldtype": "Link",
+   "label": "Customer Group",
+   "options": "Customer Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-11-02 10:36:40.326260",
+ "modified": "2022-11-06 19:27:40.715707",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Settings",

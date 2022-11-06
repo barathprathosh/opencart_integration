@@ -12,6 +12,8 @@ app_license = "MIT"
 # Includes in <head>
 # ------------------
 
+fixtures = ["Property Setter","Custom Field"]
+
 # include js, css files in header of desk.html
 # app_include_css = "/assets/opencart_integration/css/opencart_integration.css"
 # app_include_js = "/assets/opencart_integration/js/opencart_integration.js"
@@ -152,24 +154,24 @@ app_license = "MIT"
 # --------------------
 
 user_data_fields = [
-	{
-		"doctype": "{doctype_1}",
-		"filter_by": "{filter_by}",
-		"redact_fields": ["{field_1}", "{field_2}"],
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_2}",
-		"filter_by": "{filter_by}",
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_3}",
-		"strict": False,
-	},
-	{
-		"doctype": "{doctype_4}"
-	}
+    {
+        "doctype": "{doctype_1}",
+        "filter_by": "{filter_by}",
+        "redact_fields": ["{field_1}", "{field_2}"],
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_2}",
+        "filter_by": "{filter_by}",
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_3}",
+        "strict": False,
+    },
+    {
+        "doctype": "{doctype_4}"
+    }
 ]
 
 # Authentication and authorization
