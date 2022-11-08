@@ -209,3 +209,31 @@ class OpenCart:
         else:
             payment_details = address
         return payment_details
+    
+    def get_items(self):
+
+        order_items = self.order.get("products")
+        items_array = []
+        increment_id = 0
+        for order_item in order_items:
+            model = order_item["model"]
+            item = frappe.db.get_value("Item", {"item_code": model}, "name")
+            if item is None:
+                mail_msg = " In Opencart Order " + str(increment_id) + " following are Invalid Line Item " + str(model)
+                make_opencart_log(status="Error", exception=mail_msg)
+            else:
+                price = flt(order_item.get("price"))
+                discount = flt(order_item.get("discount_amount")/order_item.get("qty_ordered"))
+                induvidual_rate = price - discount
+                delivery_date = self.order["updated_at"].split(" ")[0]
+                items_array.append({
+                    "item_code": str(order_item.get("model")),
+                    "item_name": order_item.get("name"),
+                    "rate": induvidual_rate,
+                    # Note: This method to be added
+                    "delivery_date": self.get_date_warehouse_lt(delivery_date),
+                    "qty": order_item.get("quantity"),
+                    "warehouse": self.get_item_level_warehouse(),  # Note: This method to be added
+                })
+            increment_id+=1
+        self.items_in_sys = items_array
