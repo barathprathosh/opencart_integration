@@ -108,13 +108,14 @@ fixtures = ["Property Setter","Custom Field"]
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 #	"all": [
 #		"opencart_integration.tasks.all"
 #	],
-#	"daily": [
-#		"opencart_integration.tasks.daily"
-#	],
+	"daily": [
+        "opencart_integration.item.item.fetch_oc_items"
+		# "opencart_integration.tasks.daily"
+	],
 #	"hourly": [
 #		"opencart_integration.tasks.hourly"
 #	],
@@ -124,7 +125,7 @@ fixtures = ["Property Setter","Custom Field"]
 #	"monthly": [
 #		"opencart_integration.tasks.monthly"
 #	]
-# }
+}
 
 # Testing
 # -------

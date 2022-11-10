@@ -86,9 +86,9 @@ class OpenCart:
         sales_channel = frappe.get_value("Sales Channel",{"store_id":self.order.get("store_id")},["name"])
         if sales_channel:
             so = frappe.db.get_value("Sales Order", {"order_id": self.order.get("order_id"), "up_sales_channel": sales_channel}, "name")
-            order_exists = False
+            order_exists = True
             if so:
-                order_exists = True
+                order_exists = False
             return order_exists
     
     def get_customer(self):
@@ -125,8 +125,7 @@ class OpenCart:
         payment_name = self.order.get("payment_firstname") +" "+self.order.get("payment_lastname")
         self.shipping_address_name = self.shipping_address(shipping_name)
         self.payment_address_name = self.payment_address(payment_name)
-        # self.shipping_address = self.save_address(shipping_details)
-        # self.payment_address = self.save_address(payment_details)
+        return
     
     def shipping_address(self,shipping_name):
         address = frappe.get_value("Address",

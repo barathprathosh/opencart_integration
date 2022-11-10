@@ -18,7 +18,11 @@
   "customer_section",
   "customer_type",
   "column_break_11",
-  "customer_group"
+  "customer_group",
+  "item_section",
+  "item_group",
+  "column_break_15",
+  "stock_uom"
  ],
  "fields": [
   {
@@ -35,12 +39,16 @@
   {
    "fieldname": "api_username",
    "fieldtype": "Data",
-   "label": "API Username"
+   "in_list_view": 1,
+   "label": "API Username",
+   "reqd": 1
   },
   {
    "fieldname": "api_key",
    "fieldtype": "Small Text",
-   "label": "API Key"
+   "in_list_view": 1,
+   "label": "API Key",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_5",
@@ -49,17 +57,22 @@
   {
    "fieldname": "api_token",
    "fieldtype": "Data",
-   "label": "API Token"
+   "label": "API Token",
+   "reqd": 1
   },
   {
    "fieldname": "api_url",
    "fieldtype": "Data",
-   "label": "API URL"
+   "in_list_view": 1,
+   "label": "API URL",
+   "reqd": 1
   },
   {
    "fieldname": "signature",
    "fieldtype": "Data",
-   "label": "Signature"
+   "in_list_view": 1,
+   "label": "Signature",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.enable",
@@ -71,7 +84,8 @@
    "fieldname": "customer_type",
    "fieldtype": "Select",
    "label": "Customer Type",
-   "options": "Company\nIndividual"
+   "options": "Company\nIndividual",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_11",
@@ -81,13 +95,38 @@
    "fieldname": "customer_group",
    "fieldtype": "Link",
    "label": "Customer Group",
-   "options": "Customer Group"
+   "options": "Customer Group",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.enable",
+   "fieldname": "item_section",
+   "fieldtype": "Section Break",
+   "label": "Item"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Item Group",
+   "options": "Item Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "stock_uom",
+   "fieldtype": "Link",
+   "label": "Default Unit of Measure",
+   "options": "UOM",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-11-06 19:27:40.715707",
+ "modified": "2022-11-10 12:49:20.266267",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Settings",

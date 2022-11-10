@@ -43,7 +43,6 @@ class OpenCart_Items:
                     for self.item in self.items:
                         if self.item_exist():
                             self.create_item()
-                        return
                 else:
                     value = False
                 self.page += 1
@@ -72,10 +71,42 @@ class OpenCart_Items:
     
     def item_exist(self):
         item_code = frappe.get_value("Item",{"name":self.item.get("model")},["name"])
-        item_exists = False
+        item_exists = True
         if item_code:            
-            item_exists = True
+            item_exists = False
         return item_exists
     
     def create_item(self):
-        print(self.item)
+        disable = 0
+        if self.item.get("status") == 0:
+            disable = 1
+        try:
+            item_doc = frappe.get_doc({
+                "doctype": "Item",
+                "item_code": self.item.get("model"),
+                "disable": disable,
+                "product_id": self.item.get("product_id"),
+                "item_name": self.item.get("name"),
+                "item_group": opencart_settings.item_group,
+                "is_stock_item": 0,
+                "stock_uom": opencart_settings.stock_uom,
+                "standard_rate": self.item.get("price"),
+                "hsn": self.item.get("hsn"),
+                "description": self.item.get("email"),
+                "date_available": self.item.get("date_available"),
+                "length": self.item.get("length"),
+                "width": self.item.get("width"),
+                "height": self.item.get("height"),
+                "weight": self.item.get("weight"),
+                "weight_class": self.item.get("weight_class"),
+                "length_class": self.item.get("length_class"),
+                "stock_status": self.item.get("stock_status"),
+                "supplier_items": [{
+                    "supplier": self.item.get("manufacturer")
+                }]
+            })
+            item_doc.insert(ignore_mandatory=True)
+            frappe.db.commit()
+        except Exception as err:
+            make_opencart_log(status="Error", exception=str(err))
+        return
