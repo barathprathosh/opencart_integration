@@ -101,12 +101,10 @@ class OpenCart_Items:
                 "weight_class": self.item.get("weight_class"),
                 "length_class": self.item.get("length_class"),
                 "stock_status": self.item.get("stock_status"),
-                "supplier_items": [{
-                    "supplier": self.item.get("manufacturer")
-                }]
+                "brand":self.item.get("manufacturer"),
             })
             item_doc.insert(ignore_mandatory=True)
             frappe.db.commit()
         except Exception as err:
-            make_opencart_log(status="Error", exception=str(err))
+            make_opencart_log(status="Error", exception=str(err)+str( "Product ID: ",self.item.get("product_id")))
         return
