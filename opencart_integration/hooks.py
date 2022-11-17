@@ -113,7 +113,8 @@ scheduler_events = {
 #		"opencart_integration.tasks.all"
 #	],
 	"daily": [
-        "opencart_integration.item.item.fetch_oc_items"
+        "opencart_integration.item.item.fetch_oc_items",
+        "opencart_integration.customer.customer.fetch_oc_customers"
 		# "opencart_integration.tasks.daily"
 	],
 #	"hourly": [

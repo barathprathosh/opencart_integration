@@ -41,10 +41,10 @@ class OpenCart_Customers:
                 self.get_customers()
                 if self.customers:
                     for self.customer in self.customers:
-                        if self.customer_exist():
+                        customer_name = frappe.db.get_value("Customer", {"customer_id": self.customer.get('customer_id')},"name")
+                        if not customer_name:
                             customer_name = self.create_customer()
-                            self.create_address(customer_name)
-                            return
+                        self.create_address(customer_name)
                 else:
                     value = False
                 self.page += 1
@@ -71,13 +71,6 @@ class OpenCart_Customers:
             make_opencart_log(status="Error", exception=str(response))
         return
     
-    def customer_exist(self):
-        customer_name = frappe.db.get_value("Customer", {"customer_id": self.customer.get('customer_id')},"name")
-        customer_exists = True
-        if customer_name:            
-            customer_exists = False
-        return customer_exists
-    
     def create_customer(self):
         try:
             customer_entry = frappe.get_doc({
@@ -98,15 +91,12 @@ class OpenCart_Customers:
     def create_address(self,customer_name):
         if self.customer.get('address'):
             for address in self.customer.get('address'):
-                address_doc = frappe.get_value("Address",{"address_id":address.get('address_id'),"customer_id":self.customer.get('customer_id'),"link_name": customer_name},["name"])
+                address_doc = frappe.get_value("Address",{"address_id":address.get('address_id'),"customer_id":self.customer.get('customer_id')},["name"])
                 if not address_doc:
                     if self.customer.get('address_id') == address.get('address_id'):
                         self.payment_address(address,customer_name)
-                        return
                     else:
                         self.shipping_address(address,customer_name)
-                        print(address)
-                        return
         return
     
     def shipping_address(self,address,customer_name):
@@ -114,16 +104,19 @@ class OpenCart_Customers:
             frappe.set_user('Administrator')
             doc = frappe.get_doc({
                 "doctype": "Address",
-                "address_title": address,
+                "address_title": address.get("firstname")+" "+address.get("lastname"),
                 "address_type": "Shipping",
-                "address_line1": self.customer.get("shipping_address_1"),
-                "address_line2": self.customer.get("shipping_address_2"),
-                "city": self.customer.get("shipping_city"),
-                "state": self.customer.get("shipping_zone"),
-                "pincode": self.customer.get("shipping_postcode"),
-                "country": self.customer.get("shipping_country"),
-                "phone": self.customer.get("telephone"),
-                "email_id": self.customer.get("email"),
+                "address_id": address.get("address_id"),
+                "customer_id": address.get("customer_id"),
+                "address_line1": address.get("address_1"),
+                "address_line2": address.get("address_2"),
+                "city": address.get("city"),
+                "state": address.get("state"),
+                "pincode": address.get("postcode"),
+                "country": address.get("country"),
+                "phone": address.get("telephone"),
+                "email_id": address.get("email"),
+                "is_shipping_address":1,
                 "links": [{
                     "link_doctype": "Customer",
                     "link_name":  customer_name
@@ -140,16 +133,19 @@ class OpenCart_Customers:
             frappe.set_user('Administrator')
             doc = frappe.get_doc({
                 "doctype": "Address",
-                "address_title": address,
+                "address_title": address.get("firstname")+" "+address.get("lastname"),
                 "address_type": "Billing",
-                "address_line1": self.customer.get("payment_address_1"),
-                "address_line2": self.customer.get("payment_address_2"),
-                "city": self.customer.get("payment_city"),
-                "state": self.customer.get("payment_zone"),
-                "pincode": self.customer.get("payment_postcode"),
-                "country": self.customer.get("payment_country"),
-                "phone": self.customer.get("telephone"),
-                "email_id": self.customer.get("email"),
+                "address_id": address.get("address_id"),
+                "customer_id": address.get("customer_id"),
+                "address_line1": address.get("address_1"),
+                "address_line2": address.get("address_2"),
+                "city": address.get("city"),
+                "state": address.get("state"),
+                "pincode": address.get("postcode"),
+                "country": address.get("country"),
+                "phone": address.get("telephone"),
+                "email_id": address.get("email"),
+                "is_primary_address":1,
                 "links": [{
                     "link_doctype": "Customer",
                     "link_name":  customer_name
