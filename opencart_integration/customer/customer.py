@@ -44,7 +44,10 @@ class OpenCart_Customers:
                         customer_name = frappe.db.get_value("Customer", {"customer_id": self.customer.get('customer_id')},"name")
                         if not customer_name:
                             customer_name = self.create_customer()
-                        self.create_address(customer_name)
+                            if customer_name:
+                                self.create_address(customer_name)
+                        elif customer_name:
+                            self.create_address(customer_name)
                 else:
                     value = False
                 self.page += 1
