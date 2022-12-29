@@ -1,0 +1,184 @@
+{
+    "status": "200",
+    "count": "2587",
+    "products": [
+        {
+            "product_id": "1181",
+            "product_type": "0",
+            "model": "DCJK0094",
+            "sku": "DCJK0094",
+            "upc": "",
+            "ean": "",
+            "jan": "",
+            "isbn": "",
+            "mpn": "",
+            "hsn": "84735000",
+            "location": "",
+            "quantity": "0",
+            "stock_status_id": "9",
+            "image": "https://sparesale.com/image/cache/catalog/dc jack/0094/Dell-Latitude-E6420-E6400-E6410-E6500-E6510-E6520-3400-E5420-E5520-0MT643-Precision-M2400-M4400-M4500-PP30L-300x300.jpg",
+            "manufacturer_id": "11",
+            "shipping": "1",
+            "price": "₹399",
+            "points": "0",
+            "tax_class_id": "0",
+            "date_available": "2018-12-15",
+            "weight": "0.00000000",
+            "weight_class_id": "2",
+            "length": "0.00000000",
+            "width": "0.00000000",
+            "height": "0.00000000",
+            "length_class_id": "1",
+            "subtract": "1",
+            "minimum": "1",
+            "sort_order": "1",
+            "status": "1",
+            "viewed": "3588",
+            "date_added": "2018-11-21 18:34:34",
+            "date_modified": "2022-12-14 13:38:17",
+            "is_visible_in_catalog": "1",
+            "is_visible_in_search": "0",
+            "is_visible_individual": "1",
+            "language_id": "1",
+            "name": " DC Power Jack For Dell Latitude E6420, E6400, E6410, E6500, E6510, E6520, 3400, E5420, E5520 0MT643 Precision M2400, M4400, M4500, PP30L Series",
+            "description": "No Return / No Exchange Policy.Please check model Number and match with your Product.Generic and Proper&nbsp;DC JackSuper QualityEvery product cross check Before ShippingCompatible withA. Length 18 CMB. Length 31 CMC. Length 16 CME5420,&nbsp;E5520,&nbsp;E5520M,&nbsp;E6520,&nbsp;E6530,&nbsp;5420, 5520,&nbsp;E5430,&nbsp;E6420,&nbsp;E6420 ATG,&nbsp;E6430DC020009N00&nbsp;DC30100CF00&nbsp;DC30100BN0LDC30100520L, DC30100370L, DC301008B0LHW910 0HW910 CN-0HW910 JAL20 DC30100560L DC30100570LMT643, 0MT643, CN-0MT643, JBL00 DC30100520L DC30100370LFP6D6, 0FP6D6, CN-0FP6D6, NAL20 DC301008B0L,&nbsp;DC301008A0LHW910, 0HW910, CN-0HW910, JAL20, DC30100560L DC30100570L020NP9, 20NP9 DC30100E80L, DC30100DV00, DC30100BP0L50.4RU07.001, E3_15_PAL60&nbsp;0CJ28J, CJ28JNDKK9, 0NDKK9, XW85C, 0XW85C350715R00-H 350715R00-H59-G",
+            "tag": "",
+            "meta_title": "DC Power Jack For Dell Latitude E6420, E6400, E6410, E6500, E6510, E6520, 3400, E5420, E5520 0MT643 Precision M2400, M4400, M4500, PP30L Series | Sparesale | India",
+            "meta_description": "DC Power Jack For Dell Latitude E6420, E6400, E6410, E6500, E6510, E6520, 3400, E5420, E5520 0MT643 Precision M2400, M4400, M4500, PP30L Series\r\nBuy From Direct importer and Distributor in india Good Quality Fast shipping  ",
+            "meta_keyword": "Dell Latitude E6420  DC Power Jack, Dell Latitude E6410 DC Power Jack, Dell Latitude E6400 DC Power Jack, Dell Latitude E6500 DC Power Jack, Dell Latitude E6510 DC Power Jack",
+            "store_id": "0",
+            "manufacturer": "generic",
+            "discount": "",
+            "special": "",
+            "reward": null,
+            "stock_status": "Pre-Order Delivery in 20-25 Days",
+            "weight_class": "g",
+            "length_class": "cm",
+            "rating": "",
+            "reviews": "",
+            "product_discounts": [],
+            "options": [
+                {
+                    "product_option_id": "676",
+                    "product_option_value": [
+                        {
+                            "product_option_value_id": "1073",
+                            "option_value_id": "341",
+                            "name": "A",
+                            "image": "catalog/dc jack/0094/Length 18 cm.jpg",
+                            "quantity": "17",
+                            "subtract": "1",
+                            "price": "0.0000",
+                            "price_prefix": "+",
+                            "weight": "0.00000000",
+                            "weight_prefix": "+"
+                        },
+                        {
+                            "product_option_value_id": "1108",
+                            "option_value_id": "342",
+                            "name": "B",
+                            "image": "catalog/dc jack/0094/Length 31 cm.jpg",
+                            "quantity": "8",
+                            "subtract": "1",
+                            "price": "0.0000",
+                            "price_prefix": "+",
+                            "weight": "0.00000000",
+                            "weight_prefix": "+"
+                        },
+                        {
+                            "product_option_value_id": "1074",
+                            "option_value_id": "376",
+                            "name": "C",
+                            "image": "",
+                            "quantity": "15",
+                            "subtract": "1",
+                            "price": "0.0000",
+                            "price_prefix": "+",
+                            "weight": "0.00000000",
+                            "weight_prefix": "+"
+                        }
+                    ],
+                    "option_id": "129",
+                    "name": "DCJK0094 Which DC Jack do you want please select",
+                    "type": "radio",
+                    "value": "",
+                    "required": "1"
+                }
+            ],
+            "customer_group_id": 1,
+            "big_image": "https://sparesale.com/image/catalog/dc jack/0094/Dell-Latitude-E6420-E6400-E6410-E6500-E6510-E6520-3400-E5420-E5520-0MT643-Precision-M2400-M4400-M4500-PP30L.jpg",
+            "wish": 0,
+            "specification": [],
+            "images": [
+                {
+                    "image": "https://sparesale.com/image/catalog/dc jack/0094/Length-18-CM.jpg"
+                },
+                {
+                    "image": "https://sparesale.com/image/catalog/dc jack/0094/Length-31-CM.jpg"
+                },
+                {
+                    "image": "https://sparesale.com/image/catalog/dc jack/0094/Length-16-CM.jpg"
+                },
+                {
+                    "image": "https://sparesale.com/image/catalog/dc jack/0094/Dell-Latitude-E6420-E6400-E6410-E6500-E6510-E6520-3400-E5420-E5520-0MT643-Precision-M2400-M4400-M4500-PP30L.jpg"
+                }
+            ],
+            "reviews_list": [],
+            "categories": [
+                {
+                    "name": "DELL"
+                },
+                {
+                    "name": "DC Jack's"
+                }
+            ],
+            "product_discounts_all": [
+                {
+                    "priority": "0",
+                    "customer_group_id": "2",
+                    "date_start": "0000-00-00",
+                    "date_end": "0000-00-00",
+                    "quantity": "1",
+                    "tax": "1",
+                    "price": "₹299"
+                },
+                {
+                    "priority": "0",
+                    "customer_group_id": "2",
+                    "date_start": "0000-00-00",
+                    "date_end": "0000-00-00",
+                    "quantity": "2",
+                    "tax": "2",
+                    "price": "₹269"
+                },
+                {
+                    "priority": "0",
+                    "customer_group_id": "2",
+                    "date_start": "0000-00-00",
+                    "date_end": "0000-00-00",
+                    "quantity": "5",
+                    "tax": "5",
+                    "price": "₹249"
+                }
+            ],
+            "product_special_all": [
+                {
+                    "priority": "0",
+                    "customer_group_id": "2",
+                    "date_start": "2022-11-01",
+                    "date_end": "2022-11-02",
+                    "tax": null,
+                    "price": "₹350"
+                },
+                {
+                    "priority": "1",
+                    "customer_group_id": "2",
+                    "date_start": "2022-12-14",
+                    "date_end": "2022-12-16",
+                    "tax": null,
+                    "price": "₹444"
+                }
+            ]
+        }
+    ]
+}
