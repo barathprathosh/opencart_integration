@@ -34,6 +34,15 @@ frappe.ui.form.on('Opencart Settings', {
 				}
 			})
 		});
+		frm.add_custom_button(__("Sync Orders"), function() {
+			frappe.call({
+				method:"opencart_integration.sales_order.sales_order.fetch_oc_orders",
+				args:{
+				},
+				callback: function(r){
+				}
+			})
+		});
 	},
 	disable_custom_button:function(frm){
 		frm.remove_custom_button(__("Sync Item"));

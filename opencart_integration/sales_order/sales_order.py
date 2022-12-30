@@ -114,7 +114,7 @@ class OpenCart:
                 "customer_id": self.order.get('customer_id'),
                 "territory": frappe.utils.nestedset.get_root_of("Territory"),
                 "customer_type": opencart_settings.customer_type,
-                "customer_group": opencart_settings.customer_group
+                "customer_group": self.order.get("customer_group_name")
             })
             customer_entry.flags.ignore_mandatory = True
             customer_entry.insert(ignore_permissions=True)
