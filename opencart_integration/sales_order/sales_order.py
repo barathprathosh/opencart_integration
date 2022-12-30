@@ -6,19 +6,9 @@ import json
 from datetime import datetime, timedelta
 from erpnext import get_default_company
 from frappe import _
-from frappe.utils import (
-	add_days,
-	add_months,
-	cint,
-	date_diff,
-	flt,
-	get_first_day,
-	get_last_day,
-	get_link_to_form,
-	getdate,
-	rounded,
-	today,
-)
+from frappe.utils import (add_days,nowdate,add_months,cint,date_diff,flt,get_first_day,get_last_day,get_link_to_form,getdate,rounded,today)
+from erpnext.selling.doctype.sales_order.sales_order import make_sales_invoice
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
 opencart_settings = frappe.get_doc("Opencart Settings")
 
@@ -54,8 +44,9 @@ class OpenCart:
                     self.get_address()
                     self.get_items()
                     self.get_taxes_discount()
-                    self.create_so()
-                    return
+                    self.sales_order = self.create_so()
+                    self.sales_invoice = self.create_si()
+                    self.create_pe()
                 else:
                     print("Order exits")
         except Exception as err:
@@ -72,9 +63,9 @@ class OpenCart:
         params = {
             "rquest":"getorderslist",
             "page":1,
-            "start_date":"2020-08-21",
-            "start_time":"12:32:00",
-            "end_date":"2020-08-21",
+            "start_date":from_date,
+            "start_time":"00:00:01",
+            "end_date":today(),
             "end_time":"23:59:59",
         }
         response = requests.get(url.format(opencart_settings.api_url), params=params, headers=headers)
@@ -283,6 +274,7 @@ class OpenCart:
         self.taxes = tax_array
         self.discount = discount
         return
+
     def create_so(self):
         try:
             frappe.set_user('Administrator')
@@ -314,3 +306,48 @@ class OpenCart:
             return so
         except Exception as err:
             make_opencart_log(status="Error", exception="Sale order creation err-" + str(err))
+    
+    def create_si(self):
+        if self.sales_order:
+            try:
+                sales_invoice = make_sales_invoice(self.sales_order.name, ignore_permissions=True)
+                sales_invoice.set_posting_time = 1
+                sales_invoice.posting_date = self.order.get("date_added").split(" ")[0]
+                sales_invoice.due_date = self.order.get("date_modified").split(" ")[0]
+                sales_invoice.flags.ignore_mandatory = True
+                sales_invoice.insert(ignore_mandatory=True)
+                sales_invoice.submit()
+                frappe.db.commit()
+                make_opencart_log(status="Success", exception="New Sales Invoice " + sales_invoice.name + " created successfully")
+                return sales_invoice
+            except Exception as err:
+                make_opencart_log(status="Error", exception="Sale Invoice creation err-" + str(err))
+        
+    def create_pe(self):
+        if self.sales_invoice:
+            try:
+                payment_method,account = self.get_payment_method()
+                payment_entry = get_payment_entry("Sales Invoice", self.sales_invoice.name)
+                payment_entry.reference_no = self.sales_invoice.name
+                payment_entry.mode_of_payment = payment_method
+                payment_entry.paid_to = account
+                payment_entry.paid_amount = float(self.order.get("total").strip("₹").replace("₹",""))
+                payment_entry.reference_date = nowdate()
+                payment_entry.custom_remarks = 1
+                payment_entry.remarks = self.order.get("payment_method")
+                payment_entry.flags.ignore_mandatory = True
+                payment_entry.insert(ignore_permissions=True)
+                payment_entry.submit()
+                make_opencart_log(status="Success", exception="New payment entry " + payment_entry.name + " created successfully")
+            except Exception as err:
+                make_opencart_log(status="Error", exception="Payment Entry creation err-" + str(err))
+    
+    def get_payment_method(self):
+        if self.order.get("payment_code") == "cod":
+            return "Cash","1110 - Cash - GCIL"
+        elif self.order.get("payment_code") == "razorpay":
+            return "Wire Transfer","Razorpay - GCIL"
+        if self.order.get("payment_code") == "paytm":
+            return "Wire Transfer","Paytm - GCIL"
+        else:
+            return "Wire Transfer","IDBI Bank - GCIL"

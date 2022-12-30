@@ -112,6 +112,11 @@ scheduler_events = {
 #	"all": [
 #		"opencart_integration.tasks.all"
 #	],
+    "cron": {
+		"*/10 * * * *":[
+			"opencart_integration.sales_order.sales_order.fetch_oc_orders"
+		],
+    },
 	"daily": [
         "opencart_integration.item.item.fetch_oc_items",
         "opencart_integration.customer.customer.fetch_oc_customers"
