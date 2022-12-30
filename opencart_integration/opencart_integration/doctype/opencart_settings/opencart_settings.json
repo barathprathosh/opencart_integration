@@ -22,7 +22,13 @@
   "item_section",
   "item_group",
   "column_break_15",
-  "stock_uom"
+  "stock_uom",
+  "sales_section",
+  "cost_center",
+  "cod_account",
+  "column_break_20",
+  "shipping_account",
+  "tax_account"
  ],
  "fields": [
   {
@@ -121,12 +127,50 @@
    "label": "Default Unit of Measure",
    "options": "UOM",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.enable",
+   "fieldname": "sales_section",
+   "fieldtype": "Section Break",
+   "label": "Sales"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cod_account",
+   "fieldtype": "Link",
+   "label": "COD Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shipping_account",
+   "fieldtype": "Link",
+   "label": "Shipping Account",
+   "options": "Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "tax_account",
+   "fieldtype": "Link",
+   "label": "Tax Account",
+   "options": "Account",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-11-10 12:49:20.266267",
+ "modified": "2022-12-30 12:18:36.944506",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Settings",

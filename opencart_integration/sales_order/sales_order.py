@@ -42,17 +42,20 @@ class OpenCart:
                     self.shipping_address_name = ""
                     self.payment_address_name = ""
                     self.items_arr = []
-                    self.address = ''
+                    self.sales_channel = ""
+                    self.source_warehouse = ""
+                    self.delivery_warehouse = ""
                     self.items_in_sys = []
-                    self.taxes = []  # Applies to items and shipment also
+                    self.taxes = []
+                    self.discount = 0.0  # Applies to items and shipment also
                     self.is_guest = False
+                    self.get_sales_channel()
                     self.get_customer()
                     self.get_address()
                     self.get_items()
-                    self.get_taxes()
-                    self.get_shipment_taxes()
-                    self.create_shipping_rule()
+                    self.get_taxes_discount()
                     self.create_so()
+                    return
                 else:
                     print("Order exits")
         except Exception as err:
@@ -84,12 +87,20 @@ class OpenCart:
     
     def order_exits(self):
         sales_channel = frappe.get_value("Sales Channel",{"store_id":self.order.get("store_id")},["name"])
-        if sales_channel:
-            so = frappe.db.get_value("Sales Order", {"order_id": self.order.get("order_id"), "up_sales_channel": sales_channel}, "name")
-            order_exists = True
+        if sales_channel:            
+            so = frappe.db.get_value("Sales Order", {"po_no": self.order.get("order_id"), "sales_channel": sales_channel,"docstatus":1}, "name")
+            order_exists = False
             if so:
-                order_exists = False
+                order_exists = True
             return order_exists
+    
+    def get_sales_channel(self):
+        sales_details = frappe.get_list("Sales Channel",{"store_id":self.order.get("store_id")},["name","source_warehouse","delivery_warehouse"])
+        if sales_details:
+            self.sales_channel = sales_details[0].name
+            self.source_warehouse = sales_details[0].source_warehouse
+            self.delivery_warehouse = sales_details[0].delivery_warehouse
+        return
     
     def get_customer(self):
         self.customer_fname = self.order.get("firstname")
@@ -131,7 +142,7 @@ class OpenCart:
         address = frappe.get_value("Address",
         {
             "address_type":"Shipping",
-            "link_name": self.customer,
+            "customer_id": self.order.get("customer_id"),
             "address_line1":self.order.get("shipping_address_1"),
             "address_line2":self.order.get("shipping_address_2"),
             "city":self.order.get("shipping_city"),
@@ -144,6 +155,7 @@ class OpenCart:
                 frappe.set_user('Administrator')
                 doc = frappe.get_doc({
                     "doctype": "Address",
+                    "customer_id": self.order.get("customer_id"),
                     "address_title": shipping_name,
                     "address_type": "Shipping",
                     "address_line1": self.order.get("shipping_address_1"),
@@ -172,7 +184,7 @@ class OpenCart:
         address = frappe.get_value("Address",
         {
             "address_type":"Billing",
-            "link_name": self.customer,
+            "customer_id": self.order.get("customer_id"),
             "address_line1":self.order.get("payment_address_1"),
             "address_line2":self.order.get("payment_address_2"),
             "city":self.order.get("payment_city"),
@@ -185,6 +197,7 @@ class OpenCart:
                 frappe.set_user('Administrator')
                 doc = frappe.get_doc({
                     "doctype": "Address",
+                    "customer_id": self.order.get("customer_id"),
                     "address_title": payment_name,
                     "address_type": "Billing",
                     "address_line1": self.order.get("payment_address_1"),
@@ -210,29 +223,94 @@ class OpenCart:
         return payment_details
     
     def get_items(self):
-
-        order_items = self.order.get("products")
         items_array = []
         increment_id = 0
-        for order_item in order_items:
-            model = order_item["model"]
-            item = frappe.db.get_value("Item", {"item_code": model}, "name")
+        for order_item in self.order.get("products"):
+            item = frappe.db.get_value("Item", {"item_code": order_item["model"],"disabled":0}, "name")
             if item is None:
-                mail_msg = " In Opencart Order " + str(increment_id) + " following are Invalid Line Item " + str(model)
+                mail_msg = " In Opencart Order " + str(increment_id) + " following are Invalid Line Item " + str(order_item["model"])
                 make_opencart_log(status="Error", exception=mail_msg)
             else:
-                price = flt(order_item.get("price"))
-                discount = flt(order_item.get("discount_amount")/order_item.get("qty_ordered"))
-                induvidual_rate = price - discount
-                delivery_date = self.order["updated_at"].split(" ")[0]
                 items_array.append({
                     "item_code": str(order_item.get("model")),
                     "item_name": order_item.get("name"),
-                    "rate": induvidual_rate,
-                    # Note: This method to be added
-                    "delivery_date": self.get_date_warehouse_lt(delivery_date),
+                    "rate": float(order_item.get("price").strip("₹").replace("₹","")),
+                    "delivery_date": self.order.get("date_modified").split(" ")[0],
                     "qty": order_item.get("quantity"),
-                    "warehouse": self.get_item_level_warehouse(),  # Note: This method to be added
+                    "warehouse": self.delivery_warehouse
                 })
             increment_id+=1
         self.items_in_sys = items_array
+        return
+    def get_taxes_discount(self):
+        tax_array = []
+        discount = 0
+        for tax in self.order.get("order_totals"):
+            if tax:
+                if tax.get("code") == "advancedpostcodecod":
+                    if tax.get("value"):
+                        tax_array.append({
+                            "charge_type":"Actual",
+                            "account_head":opencart_settings.cod_account,
+                            "description":"Cash on Delivery Fee",
+                            "cost_center":opencart_settings.cost_center,
+                            "tax_amount":tax.get("value")
+                        })
+                if tax.get("code") == "coupon":
+                    if tax.get("value"):
+                        discount += float(tax.get("value"))
+                if tax.get("code") == "reward":
+                    if tax.get("value"):
+                        discount += float(tax.get("value"))
+                if tax.get("code") == "shipping":
+                    if tax.get("value"):
+                        tax_array.append({
+                            "charge_type":"Actual",
+                            "account_head":opencart_settings.shipping_account,
+                            "description":"Shipping Charges",
+                            "cost_center":opencart_settings.cost_center,
+                            "tax_amount":tax.get("value")
+                        })
+                if tax.get("code") == "tax":
+                    if tax.get("value"):
+                        tax_array.append({
+                            "charge_type":"Actual",
+                            "account_head":opencart_settings.tax_account,
+                            "description":"Taxes",
+                            "cost_center":opencart_settings.cost_center,
+                            "tax_amount":tax.get("value")
+                        })
+        self.taxes = tax_array
+        self.discount = discount
+        return
+    def create_so(self):
+        try:
+            frappe.set_user('Administrator')
+            purchase_date = self.order.get("date_added").split(" ")[0]
+            delivery_date = self.order.get("date_modified").split(" ")[0]
+            so = frappe.get_doc({
+                "doctype": "Sales Order",
+                "order_type":"Sales",
+                "transaction_date":purchase_date,
+                "set_warehouse": self.source_warehouse,
+                "po_no": self.order.get("order_id"),
+                "po_date": purchase_date,
+                "customer": self.customer,
+                "sales_channel":self.sales_channel,
+                "delivery_date": delivery_date,
+                "ignore_pricing_rule": 1,
+                "items": self.items_in_sys,
+                "company": frappe.db.get_single_value("Global Defaults", "default_company"),
+                "taxes": self.taxes,
+                "customer_address": self.payment_address_name,
+                "shipping_address_name": self.shipping_address_name,
+                "apply_discount_no":"Grand Total",
+                "discount_amount":self.discount
+            })
+            so.flags.ignore_mandatory = True
+            so.save(ignore_permissions=True)
+            so.submit()
+            make_opencart_log(status="Success", exception="New sale order " + so.name + " created successfully")
+            return so
+        except Exception as err:
+            make_opencart_log(status="Error", exception="Sale order creation err-" + str(err))
