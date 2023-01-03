@@ -26,29 +26,33 @@ class OpenCart:
         try:
             self.get_orders()
             for self.order in self.orders:
-                if not self.order_exits():
-                    self.customer_fname = ""
-                    self.customer_lname = ""
-                    self.shipping_address_name = ""
-                    self.payment_address_name = ""
-                    self.items_arr = []
-                    self.sales_channel = ""
-                    self.source_warehouse = ""
-                    self.delivery_warehouse = ""
-                    self.items_in_sys = []
-                    self.taxes = []
-                    self.discount = 0.0  # Applies to items and shipment also
-                    self.is_guest = False
-                    self.get_sales_channel()
-                    self.get_customer()
-                    self.get_address()
-                    self.get_items()
-                    self.get_taxes_discount()
-                    self.sales_order = self.create_so()
-                    self.sales_invoice = self.create_si()
-                    self.create_pe()
-                else:
-                    print("Order exits")
+                if self.order.get("order_status") == "Processed":
+                    if not self.order_exits():
+                        self.customer_fname = ""
+                        self.customer_lname = ""
+                        self.shipping_address_name = ""
+                        self.payment_address_name = ""
+                        self.items_arr = []
+                        self.sales_channel = ""
+                        self.source_warehouse = ""
+                        self.delivery_warehouse = ""
+                        self.items_in_sys = []
+                        self.taxes = []
+                        self.discount = 0.0  # Applies to items and shipment also
+                        self.is_guest = False
+                        self.get_sales_channel()
+                        self.get_customer()
+                        self.get_address()
+                        self.get_items()
+                        self.get_taxes_discount()
+                        self.sales_order = self.create_so()
+                        self.sales_invoice = self.create_si()
+                        self.create_pe()
+                    else:
+                        print("Order exits")
+                elif self.order.get("order_status") == "Failed":
+                    if self.order_exits():
+                        self.failed_order()
         except Exception as err:
             make_opencart_log(status="Error", exception=str(err))
     
@@ -351,3 +355,42 @@ class OpenCart:
             return "Wire Transfer","Paytm - GCIL"
         else:
             return "Wire Transfer","IDBI Bank - GCIL"
+        
+    def failed_order(self):
+        array = []
+        sales_channel = frappe.get_value("Sales Channel",{"store_id":self.order.get("store_id")},["name"])
+        if sales_channel:            
+            sales_order = frappe.db.get_value("Sales Order", {"po_no": self.order.get("order_id"), "sales_channel": sales_channel,"docstatus":1}, "name")
+            if sales_order:
+                array.insert(0,{
+                    "doctype":"Sales Order",
+                    "name":sales_order
+                })
+                sales_invoice = frappe.get_value("Sales Invoice Item",{"docstatus":1,"sales_order":sales_order},"parent")
+                if sales_invoice:
+                    array.insert(0,{
+                        "doctype":"Sales Invoice",
+                        "name":sales_invoice
+                    })
+                    payment_entry = frappe.get_value("Payment Entry Reference",{"docstatus":1,"reference_doctype":"Sales Invoice","reference_name":sales_invoice},"parent")
+                    if payment_entry:
+                        array.insert(0,{
+                            "doctype":"Payment Entry",
+                            "name":payment_entry
+                        })
+                        cancel_order(array)
+                    else:
+                        cancel_order(array)
+                else:
+                    cancel_order(array)
+        return
+
+def cancel_order(array):
+    for order in array:
+        try:
+            doc = frappe.get_doc(order.get("doctype"),order.get("name"))
+            doc.cancel()
+            frappe.db.commit()
+        except Exception as err:
+                make_opencart_log(status="Error", exception="Doctype Cancel error-" + str(err))
+    return
