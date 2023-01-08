@@ -316,6 +316,7 @@ class OpenCart:
             try:
                 sales_invoice = make_sales_invoice(self.sales_order.name, ignore_permissions=True)
                 sales_invoice.set_posting_time = 1
+                sales_invoice.update_stock = 1
                 sales_invoice.posting_date = self.order.get("date_added").split(" ")[0]
                 sales_invoice.due_date = self.order.get("date_modified").split(" ")[0]
                 sales_invoice.flags.ignore_mandatory = True
@@ -326,6 +327,11 @@ class OpenCart:
                 return sales_invoice
             except Exception as err:
                 make_opencart_log(status="Error", exception="Sale Invoice creation err-" + str(err))
+                cancel_order(array = [{
+                            "doctype":"Sales Order",
+                            "name":self.sales_order
+                        }])
+
         
     def create_pe(self):
         if self.sales_invoice:

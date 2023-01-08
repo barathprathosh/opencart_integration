@@ -80,7 +80,11 @@ class OpenCart_Items:
         product_category = self.get_product_category()
         discount_items = self.get_discount_items()
         special_discount = self.get_special_discount_items()
-        disable = 0
+        disable = quantity = 0
+        if self.item.get("quantity") > 0:
+            quantity = self.item.get("quantity")
+        else:
+            quantity = 0
         if self.item.get("status") == 0:
             disable = 1
         try:
@@ -88,6 +92,8 @@ class OpenCart_Items:
                 "doctype": "Item",
                 "item_code": self.item.get("model"),
                 "disable": disable,
+                "is_stock_item":1,
+                "opening_stock":quantity,
                 "product_id": self.item.get("product_id"),
                 "item_name": self.item.get("name"),
                 "item_group": opencart_settings.item_group,
