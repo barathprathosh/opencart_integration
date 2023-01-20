@@ -240,6 +240,22 @@ class OpenCart:
     def get_taxes_discount(self):
         tax_array = []
         discount = 0
+        tax_array.append({
+            "charge_type":"On Net Total",
+            "account_head":"CGST-9% - GCIL",
+            "description":"CGST-9% - GCIL",
+            "cost_center":"Main - GCIL",
+            "rate":9,
+            "included_in_print_rate":1
+        })
+        tax_array.append({
+            "charge_type":"On Net Total",
+            "account_head":"SGST-9% - GCIL",
+            "description":"SGST-9% - GCIL",
+            "cost_center":"Main - GCIL",
+            "rate":9,
+            "included_in_print_rate":1
+        })
         for tax in self.order.get("order_totals"):
             if tax:
                 if tax.get("code") == "advancedpostcodecod":
