@@ -235,8 +235,31 @@ class OpenCart:
                     "warehouse": self.delivery_warehouse
                 })
             increment_id+=1
+        for tax in self.order.get("order_totals"):
+            if tax:
+                if tax.get("code") == "advancedpostcodecod":
+                    if float(tax.get("value")) > 0:
+                        items_array.append({
+                            "item_code": "Cash on Delivery Fee",
+                            "item_name": "Cash on Delivery Fee",
+                            "rate": float(tax.get("value")),
+                            "delivery_date": self.order.get("date_modified").split(" ")[0],
+                            "qty": 1,
+                            "warehouse": self.delivery_warehouse
+                        })
+                if tax.get("code") == "shipping":
+                    if float(tax.get("value")) > 0:
+                        items_array.append({
+                            "item_code": "Shipping Charges",
+                            "item_name": "Shipping Charges",
+                            "rate": float(tax.get("value")),
+                            "delivery_date": self.order.get("date_modified").split(" ")[0],
+                            "qty": 1,
+                            "warehouse": self.delivery_warehouse
+                        })
         self.items_in_sys = items_array
         return
+        
     def get_taxes_discount(self):
         tax_array = []
         discount = 0
@@ -258,30 +281,12 @@ class OpenCart:
         })
         for tax in self.order.get("order_totals"):
             if tax:
-                if tax.get("code") == "advancedpostcodecod":
-                    if tax.get("value"):
-                        tax_array.append({
-                            "charge_type":"Actual",
-                            "account_head":opencart_settings.cod_account,
-                            "description":"Cash on Delivery Fee",
-                            "cost_center":opencart_settings.cost_center,
-                            "tax_amount":tax.get("value")
-                        })
                 if tax.get("code") == "coupon":
                     if tax.get("value"):
                         discount += float(tax.get("value"))
                 if tax.get("code") == "reward":
                     if tax.get("value"):
                         discount += float(tax.get("value"))
-                if tax.get("code") == "shipping":
-                    if tax.get("value"):
-                        tax_array.append({
-                            "charge_type":"Actual",
-                            "account_head":opencart_settings.shipping_account,
-                            "description":"Shipping Charges",
-                            "cost_center":opencart_settings.cost_center,
-                            "tax_amount":tax.get("value")
-                        })
                 if tax.get("code") == "tax":
                     if tax.get("value"):
                         tax_array.append({
