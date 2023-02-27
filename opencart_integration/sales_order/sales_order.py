@@ -24,35 +24,42 @@ class OpenCart:
 
     def call(self):
         try:
-            self.get_orders()
-            for self.order in self.orders:
-                if self.order.get("order_status") == "Processed":
-                    if not self.order_exits():
-                        self.customer_fname = ""
-                        self.customer_lname = ""
-                        self.shipping_address_name = ""
-                        self.payment_address_name = ""
-                        self.items_arr = []
-                        self.sales_channel = ""
-                        self.source_warehouse = ""
-                        self.delivery_warehouse = ""
-                        self.items_in_sys = []
-                        self.taxes = []
-                        self.discount = 0.0  # Applies to items and shipment also
-                        self.is_guest = False
-                        self.get_sales_channel()
-                        self.get_customer()
-                        self.get_address()
-                        self.get_items()
-                        self.get_taxes_discount()
-                        self.sales_order = self.create_so()
-                        self.sales_invoice = self.create_si()
-                        self.create_pe()
-                    else:
-                        print("Order exits")
-                elif self.order.get("order_status") == "Failed":
-                    if self.order_exits():
-                        self.failed_order()
+            self.page = 1
+            value = True
+            while (value):
+                self.get_orders()
+                if self.orders:
+                    for self.order in self.orders:
+                        if self.order.get("order_status") in ["Processed","Shipped","Complete","Ready to ship"]:
+                            if not self.order_exits():
+                                self.customer_fname = ""
+                                self.customer_lname = ""
+                                self.shipping_address_name = ""
+                                self.payment_address_name = ""
+                                self.items_arr = []
+                                self.sales_channel = ""
+                                self.source_warehouse = ""
+                                self.delivery_warehouse = ""
+                                self.items_in_sys = []
+                                self.taxes = []
+                                self.discount = 0.0  # Applies to items and shipment also
+                                self.is_guest = False
+                                self.get_sales_channel()
+                                self.get_customer()
+                                self.get_address()
+                                self.get_items()
+                                self.get_taxes_discount()
+                                self.sales_order = self.create_so()
+                                self.sales_invoice = self.create_si()
+                                self.create_pe()
+                            else:
+                                print("Order exits")
+                        elif self.order.get("order_status") in ["Failed","Canceled"]:
+                            if self.order_exits():
+                                self.failed_order()
+                else:
+                    value = False
+                self.page += 1
         except Exception as err:
             make_opencart_log(status="Error", exception=str(err))
     
@@ -66,7 +73,7 @@ class OpenCart:
         }
         params = {
             "rquest":"getorderslist",
-            "page":1,
+            "page":self.page,
             "start_date":from_date,
             "start_time":"00:00:01",
             "end_date":today(),

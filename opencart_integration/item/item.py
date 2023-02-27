@@ -81,8 +81,8 @@ class OpenCart_Items:
         discount_items = self.get_discount_items()
         special_discount = self.get_special_discount_items()
         disable = quantity = 0
-        if self.item.get("quantity") > 0:
-            quantity = self.item.get("quantity")
+        if float(self.item.get("quantity")) > 0:
+            quantity = float(self.item.get("quantity"))
         else:
             quantity = 0
         if self.item.get("status") == 0:
