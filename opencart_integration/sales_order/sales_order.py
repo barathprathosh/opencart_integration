@@ -40,6 +40,7 @@ class OpenCart:
                                 self.sales_channel = ""
                                 self.source_warehouse = ""
                                 self.delivery_warehouse = ""
+                                self.company_address = ""
                                 self.items_in_sys = []
                                 self.taxes = []
                                 self.discount = 0.0  # Applies to items and shipment also
@@ -97,11 +98,12 @@ class OpenCart:
             return order_exists
     
     def get_sales_channel(self):
-        sales_details = frappe.get_list("Sales Channel",{"store_id":self.order.get("store_id")},["name","source_warehouse","delivery_warehouse"])
+        sales_details = frappe.get_list("Sales Channel",{"store_id":self.order.get("store_id")},["name","source_warehouse","delivery_warehouse","company_address"])
         if sales_details:
             self.sales_channel = sales_details[0].name
             self.source_warehouse = sales_details[0].source_warehouse
             self.delivery_warehouse = sales_details[0].delivery_warehouse
+            self.company_address = sales_details[0].company_address
         return
     
     def get_customer(self):
@@ -179,8 +181,8 @@ class OpenCart:
             except Exception as err:
                 make_opencart_log(status="Error", exception="Error while creating Shipping Address" + str(err))
         else:
-            shipping_details = address
-        return shipping_details
+            return address
+        return
     
     def payment_address(self,payment_name):
         address = frappe.get_value("Address",
@@ -221,8 +223,8 @@ class OpenCart:
             except Exception as err:
                 make_opencart_log(status="Error", exception="Error while creating Billing Address" + str(err))
         else:
-            payment_details = address
-        return payment_details
+            return address
+        return
     
     def get_items(self):
         items_array = []
@@ -270,22 +272,34 @@ class OpenCart:
     def get_taxes_discount(self):
         tax_array = []
         discount = 0
-        tax_array.append({
-            "charge_type":"On Net Total",
-            "account_head":"CGST-9% - GCIL",
-            "description":"CGST-9% - GCIL",
-            "cost_center":"Main - GCIL",
-            "rate":9,
-            "included_in_print_rate":1
-        })
-        tax_array.append({
-            "charge_type":"On Net Total",
-            "account_head":"SGST-9% - GCIL",
-            "description":"SGST-9% - GCIL",
-            "cost_center":"Main - GCIL",
-            "rate":9,
-            "included_in_print_rate":1
-        })
+        company_state = frappe.get_value("Address",{"name":self.company_address},["state"])
+        if company_state:
+            if self.order.get("shipping_zone") == str(company_state):
+                tax_array.append({
+                    "charge_type":"On Net Total",
+                    "account_head":"CGST-9% - GCIL",
+                    "description":"CGST-9% - GCIL",
+                    "cost_center":"Main - GCIL",
+                    "rate":9,
+                    "included_in_print_rate":1
+                })
+                tax_array.append({
+                    "charge_type":"On Net Total",
+                    "account_head":"SGST-9% - GCIL",
+                    "description":"SGST-9% - GCIL",
+                    "cost_center":"Main - GCIL",
+                    "rate":9,
+                    "included_in_print_rate":1
+                })
+            else:
+                tax_array.append({
+                    "charge_type":"On Net Total",
+                    "account_head":"IGST-18% - GCIL",
+                    "description":"IGST-18% - GCIL",
+                    "cost_center":"Main - GCIL",
+                    "rate":18,
+                    "included_in_print_rate":1
+                })
         for tax in self.order.get("order_totals"):
             if tax:
                 if tax.get("code") == "coupon":

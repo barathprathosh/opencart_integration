@@ -11,7 +11,8 @@
   "store_name",
   "store_id",
   "source_warehouse",
-  "delivery_warehouse"
+  "delivery_warehouse",
+  "company_address"
  ],
  "fields": [
   {
@@ -41,11 +42,18 @@
    "label": "Delivery Warehouse",
    "options": "Warehouse",
    "reqd": 1
+  },
+  {
+   "fieldname": "company_address",
+   "fieldtype": "Link",
+   "label": "Company Address",
+   "options": "Address",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-09 10:03:41.858064",
+ "modified": "2023-03-05 18:37:15.768152",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Sales Channel",
