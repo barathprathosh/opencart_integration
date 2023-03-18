@@ -41,7 +41,7 @@ class OpenCart_Items:
                 self.get_items()
                 if self.items:
                     for self.item in self.items:
-                        if self.item_exist():
+                        if self.item_exist() and self.item.get("product_type") != 2:
                             self.create_item()
                 else:
                     value = False
@@ -84,7 +84,7 @@ class OpenCart_Items:
         if float(self.item.get("quantity")) > 0:
             quantity = float(self.item.get("quantity"))
         else:
-            quantity = 0
+            quantity = 1
         if self.item.get("status") == 0:
             disable = 1
         try:
@@ -98,10 +98,11 @@ class OpenCart_Items:
                 "item_name": self.item.get("name"),
                 "item_group": opencart_settings.item_group,
                 "product_category":product_category,
-                "is_stock_item": 0,
+                "is_stock_item": 1,
+                "valuation_rate":float(self.item.get("upc") or 1),
                 "stock_uom": opencart_settings.stock_uom,
                 "standard_rate": self.item.get("price"),
-                "hsn": self.item.get("hsn"),
+                "gst_hsn_code": self.item.get("hsn"),
                 "description": self.item.get("email"),
                 "date_available": self.item.get("date_available"),
                 "length": self.item.get("length"),
@@ -136,7 +137,7 @@ class OpenCart_Items:
                         })
                         product_category.insert(ignore_mandatory=True)
                         frappe.db.commit()
-                        category_list.append(({"product_category":product_category.name}))
+                        category_list.append({"product_category":product_category.name})
                     except Exception as err:
                         make_opencart_log(status="Error", exception=str(err)+str( "Product ID: ",self.item.get("product_id")))
         return category_list

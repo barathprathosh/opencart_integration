@@ -272,34 +272,34 @@ class OpenCart:
     def get_taxes_discount(self):
         tax_array = []
         discount = 0
-        company_state = frappe.get_value("Address",{"name":self.company_address},["state"])
-        if company_state:
-            if self.order.get("shipping_zone") == str(company_state):
-                tax_array.append({
-                    "charge_type":"On Net Total",
-                    "account_head":"CGST-9% - GCIL",
-                    "description":"CGST-9% - GCIL",
-                    "cost_center":"Main - GCIL",
-                    "rate":9,
-                    "included_in_print_rate":1
-                })
-                tax_array.append({
-                    "charge_type":"On Net Total",
-                    "account_head":"SGST-9% - GCIL",
-                    "description":"SGST-9% - GCIL",
-                    "cost_center":"Main - GCIL",
-                    "rate":9,
-                    "included_in_print_rate":1
-                })
-            else:
-                tax_array.append({
-                    "charge_type":"On Net Total",
-                    "account_head":"IGST-18% - GCIL",
-                    "description":"IGST-18% - GCIL",
-                    "cost_center":"Main - GCIL",
-                    "rate":18,
-                    "included_in_print_rate":1
-                })
+        # company_state = frappe.get_value("Address",{"name":self.company_address},["state"])
+        # if company_state:
+        #     if self.order.get("shipping_zone") == str(company_state):
+        #         tax_array.append({
+        #             "charge_type":"On Net Total",
+        #             "account_head":"CGST-9% - GCIL",
+        #             "description":"CGST-9% - GCIL",
+        #             "cost_center":"Main - GCIL",
+        #             "rate":9,
+        #             "included_in_print_rate":1
+        #         })
+        #         tax_array.append({
+        #             "charge_type":"On Net Total",
+        #             "account_head":"SGST-9% - GCIL",
+        #             "description":"SGST-9% - GCIL",
+        #             "cost_center":"Main - GCIL",
+        #             "rate":9,
+        #             "included_in_print_rate":1
+        #         })
+        #     else:
+        #         tax_array.append({
+        #             "charge_type":"On Net Total",
+        #             "account_head":"IGST-18% - GCIL",
+        #             "description":"IGST-18% - GCIL",
+        #             "cost_center":"Main - GCIL",
+        #             "rate":18,
+        #             "included_in_print_rate":1
+        #         })
         for tax in self.order.get("order_totals"):
             if tax:
                 if tax.get("code") == "coupon":
@@ -358,7 +358,7 @@ class OpenCart:
             try:
                 sales_invoice = make_sales_invoice(self.sales_order.name, ignore_permissions=True)
                 sales_invoice.set_posting_time = 1
-                sales_invoice.update_stock = 1
+                sales_invoice.update_stock = 0
                 sales_invoice.posting_date = self.order.get("date_added").split(" ")[0]
                 sales_invoice.due_date = self.order.get("date_modified").split(" ")[0]
                 sales_invoice.flags.ignore_mandatory = True
@@ -398,11 +398,11 @@ class OpenCart:
         if self.order.get("payment_code") == "cod":
             return "Cash","1110 - Cash - GCIL"
         elif self.order.get("payment_code") == "razorpay":
-            return "Wire Transfer","Razorpay - GCIL"
+            return "Razorpay","Razorpay - GCIL"
         if self.order.get("payment_code") == "paytm":
-            return "Wire Transfer","Paytm - GCIL"
+            return "PayTM","Paytm - GCIL"
         else:
-            return "Wire Transfer","IDBI Bank - GCIL"
+            return "Bank Transfer","IDBI Bank - GCIL"
         
     def failed_order(self):
         array = []
