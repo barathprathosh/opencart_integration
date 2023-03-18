@@ -85,7 +85,7 @@ class OpenCart:
         if response.get("status") == 200:
             self.orders = response.get("orders")
         else:
-            make_opencart_log(status="Error", exception=str(response))
+            raise make_opencart_log(status="Error-get_orders", exception=str(response))
         return
     
     def order_exits(self):
