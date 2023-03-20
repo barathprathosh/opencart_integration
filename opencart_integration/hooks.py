@@ -97,13 +97,18 @@ fixtures = ["Property Setter","Custom Field"]
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+doc_events = {
 #	"*": {
 #		"on_update": "method",
 #		"on_cancel": "method",
 #		"on_trash": "method"
 #	}
-# }
+    "Purchase Receipt":{
+        "on_submit":"opencart_integration.purchase_receipt.purchase_receipt.update_stock_oc",
+        "on_cancel":"opencart_integration.purchase_receipt.purchase_receipt.update_stock_oc",
+        "validate":"opencart_integration.purchase_receipt.purchase_receipt.get_stock_balance_qty"
+    }
+}
 
 # Scheduled Tasks
 # ---------------

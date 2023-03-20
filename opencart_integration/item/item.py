@@ -1,5 +1,4 @@
 import frappe
-import requests
 from frappe.utils.data import today
 import requests
 from opencart_integration.opencart_integration.doctype.opencart_log.opencart_log import make_opencart_log
@@ -66,7 +65,7 @@ class OpenCart_Items:
         if response.get("status") == "200":
             self.items = response.get("products")
         else:
-            make_opencart_log(status="Error", exception=str(response))
+            raise make_opencart_log(status="Error", exception=str(response))
         return
     
     def item_exist(self):
