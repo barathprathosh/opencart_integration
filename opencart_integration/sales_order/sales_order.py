@@ -34,8 +34,11 @@ class OpenCart:
                             if not self.order_exits():
                                 self.customer_fname = ""
                                 self.customer_lname = ""
+                                self.customer_company_name = ""
+                                self.gst_no = ""
                                 self.shipping_address_name = ""
                                 self.payment_address_name = ""
+                                self.contact_detail = ""
                                 self.items_arr = []
                                 self.sales_channel = ""
                                 self.source_warehouse = ""
@@ -46,8 +49,10 @@ class OpenCart:
                                 self.discount = 0.0  # Applies to items and shipment also
                                 self.is_guest = False
                                 self.get_sales_channel()
+                                self.get_gst_detail()
                                 self.get_customer()
                                 self.get_address()
+                                self.get_contact_details()
                                 self.get_items()
                                 self.get_taxes_discount()
                                 self.sales_order = self.create_so()
@@ -91,7 +96,7 @@ class OpenCart:
     def order_exits(self):
         sales_channel = frappe.get_value("Sales Channel",{"store_id":self.order.get("store_id")},["name"])
         if sales_channel:            
-            so = frappe.db.get_value("Sales Order", {"po_no": self.order.get("order_id"), "sales_channel": sales_channel,"docstatus":1}, "name")
+            so = frappe.db.get_value("Sales Order", {"oc_invoice_no": self.order.get("order_id"), "sales_channel": sales_channel,"docstatus":1}, "name")
             order_exists = False
             if so:
                 order_exists = True
@@ -127,19 +132,37 @@ class OpenCart:
                 "customer_id": self.order.get('customer_id'),
                 "territory": frappe.utils.nestedset.get_root_of("Territory"),
                 "customer_type": opencart_settings.customer_type,
-                "customer_group": self.order.get("customer_group_name")
+                "customer_group": self.order.get("customer_group_name"),
+                "customer_primary_contact":self.contact_detail
             })
+            if self.gst_no:
+                customer_entry.customer_company_name = self.customer_company_name
+                customer_entry.gst_category="Registered Regular"
+                customer_entry.gstin = self.gst_no
             customer_entry.flags.ignore_mandatory = True
             customer_entry.insert(ignore_permissions=True)
             frappe.db.commit()
         except Exception as err:
             make_opencart_log(status="Error", exception="Error while creating new customer" + str(err))
 
+    def get_gst_detail(self):
+        if self.order.get("customer_custom_fields"):
+            for data in self.order.get("customer_custom_fields"):
+                if data.get("name") == "company name":
+                    self.customer_company_name = data.get("value")
+                if data.get("name") == "GST Number":
+                    self.gst_no = data.get("value")
+        return
+
     def get_address(self):
         shipping_name = self.order.get("shipping_firstname") +" "+self.order.get("shipping_lastname")
         payment_name = self.order.get("payment_firstname") +" "+self.order.get("payment_lastname")
         self.shipping_address_name = self.shipping_address(shipping_name)
         self.payment_address_name = self.payment_address(payment_name)
+        return
+    
+    def get_contact_details(self):
+        self.contact_detail = self.contact_data()
         return
     
     def shipping_address(self,shipping_name):
@@ -175,6 +198,10 @@ class OpenCart:
                         "link_name":  self.customer
                     }]
                 })
+                if self.gst_no:
+                    doc.customer_company_name = self.customer_company_name
+                    doc.gst_category="Registered Regular"
+                    doc.gstin = self.gst_no
                 doc.insert(ignore_mandatory=True)
                 frappe.db.commit()
                 return doc.name
@@ -217,6 +244,10 @@ class OpenCart:
                         "link_name":  self.customer
                     }]
                 })
+                if self.gst_no:
+                    doc.customer_company_name = self.customer_company_name
+                    doc.gst_category="Registered Regular"
+                    doc.gstin = self.gst_no
                 doc.insert(ignore_mandatory=True)
                 frappe.db.commit()
                 return doc.name
@@ -224,6 +255,43 @@ class OpenCart:
                 make_opencart_log(status="Error", exception="Error while creating Billing Address" + str(err))
         else:
             return address
+        return
+    
+    def contact_data(self):
+        contact = frappe.get_value("Contact",
+        {
+            "first_name": self.order.get("firstname"),
+            "last_name":self.order.get("lastname"),
+            "email_id":self.order.get("email"),
+            "phone":self.order.get("telephone")
+            },["name"])
+        if not contact:
+            try:
+                frappe.set_user('Administrator')
+                doc = frappe.get_doc({
+                    "doctype": "Contact",
+                    "first_name": self.order.get("firstname"),
+                    "last_name":self.order.get("lastname"),
+                    "email_ids": [{
+                        "email_id": self.order.get("email"),
+                        "is_primary": 1
+                    }],
+                    "phone_nos": [{
+                        "phone": self.order.get("telephone"),
+                        "is_primary_phone": 1
+                    }],
+                    "links": [{
+                        "link_doctype": "Customer",
+                        "link_name":  self.customer
+                    }]
+                })
+                doc.insert(ignore_mandatory=True)
+                frappe.db.commit()
+                return doc.name
+            except Exception as err:
+                make_opencart_log(status="Error", exception="Error while creating Contact Detail" + str(err))
+        else:
+            return contact
         return
     
     def get_items(self):
@@ -317,7 +385,8 @@ class OpenCart:
                             "cost_center":opencart_settings.cost_center,
                             "tax_amount":tax.get("value")
                         })
-        self.taxes = tax_array
+        if tax_array:
+            self.taxes = tax_array
         self.discount = discount
         return
 
@@ -331,6 +400,7 @@ class OpenCart:
                 "order_type":"Sales",
                 "transaction_date":purchase_date,
                 "set_warehouse": self.source_warehouse,
+                "oc_invoice_no": self.order.get("order_id"),
                 "po_no": self.order.get("order_id"),
                 "po_date": purchase_date,
                 "customer": self.customer,
