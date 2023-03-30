@@ -124,7 +124,8 @@ scheduler_events = {
     },
 	"daily": [
         "opencart_integration.item.item.fetch_oc_items",
-        "opencart_integration.customer.customer.fetch_oc_customers"
+        "opencart_integration.customer.customer.fetch_oc_customers",
+        "opencart_integration.deleted_document.deleted_document.clear_deleted_document"
 		# "opencart_integration.tasks.daily"
 	],
 #	"hourly": [
