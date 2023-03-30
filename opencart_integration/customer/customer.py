@@ -71,7 +71,7 @@ class OpenCart_Customers:
         if response.get("status") == "200":
             self.customers = response.get("data")
         else:
-            make_opencart_log(status="Error", exception=str(response))
+            raise make_opencart_log(status="Error", exception=str(response))
         return
     
     def create_customer(self):
