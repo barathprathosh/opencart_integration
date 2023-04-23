@@ -24,6 +24,7 @@
   "column_break_15",
   "stock_uom",
   "sales_section",
+  "fetch_orders_by_days",
   "cost_center",
   "cod_account",
   "column_break_20",
@@ -165,12 +166,19 @@
    "label": "Tax Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "description": "Example: Fetch order from Last <b>10</b> Days",
+   "fieldname": "fetch_orders_by_days",
+   "fieldtype": "Int",
+   "label": "Fetch Orders by Days",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-12-30 12:18:36.944506",
+ "modified": "2023-04-23 12:59:15.448730",
  "modified_by": "Administrator",
  "module": "Opencart Integration",
  "name": "Opencart Settings",

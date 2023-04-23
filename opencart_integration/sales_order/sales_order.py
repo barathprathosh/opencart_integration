@@ -31,8 +31,6 @@ class OpenCart:
                 if self.orders:
                     for self.order in self.orders:
                         try:
-                            print(self.order.get("order_id"))
-                            print(self.order.get("order_status"))
                             if self.order.get("order_status") in ["Processed","Shipped","Complete","Ready to ship"]:
                                 if not self.order_exits():
                                     self.customer_fname = ""
@@ -77,7 +75,7 @@ class OpenCart:
     
     def get_orders(self):
         url = "{}/api/invoiceapi.php"
-        from_date = add_days(today(), -1)
+        from_date = add_days(today(), -int(opencart_settings.fetch_orders_by_days))
         headers = {
             'signature': opencart_settings.signature,
             'token': opencart_settings.api_token,

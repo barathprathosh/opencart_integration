@@ -7,7 +7,6 @@ def clear_deleted_document():
     from_date = add_days(today(), -15)
     deleted_document = frappe.db.sql("""SELECT name FROM `tabDeleted Document` WHERE creation < %s """,from_date,as_dict=True)
     for dd in deleted_document:
-        print(dd)
         doc = frappe.get_doc("Deleted Document",dd.name)
         doc.delete()
         frappe.db.commit()
