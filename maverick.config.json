@@ -1,7 +1,0 @@
-{
-  "auto_review_all_prs": true,
-  "supported_file_extensions": [".js", ".py", ".java"],
-  "ignored_directories": ["node_modules", "__pycache__", "venv"],
-  "supported_pr_creators": ["barathprathosh"],
-  "blacklisted_pr_title_regexes": ["^WIP:", "^Draft:"]
-}
